@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 
 app.use(express.json());
+app.use(middleware);
+app.use(logger);
 
 let courses =   [
     {id: 1, name: "java"},
@@ -50,6 +52,22 @@ app.delete('/courses/:id', (req, res) => {
     res.json(courses);
 });
 
+function middleware(req,res,next){
+    console.log("Called middleware");
+    next();
+}
+
+function logger(req,res,next){
+    
+    const method = req.method;
+    const ip = req.ip;
+    const hostname = req.hostname;
+    const date = new Date();
+
+    console.log(`[${date}] ${method} request to ${hostname} from IP ${ip}`);
+
+    next();
+}
 
 app.listen(3000, ()=>{
     console.log("Server Started.");
